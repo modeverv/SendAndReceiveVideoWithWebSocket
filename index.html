@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>lovesaemihome</title>
+  <title>Receive Video</title>
   <style>
     body {
       margin: 0;
@@ -14,13 +14,13 @@
 </head>
 
 <body>
-  <img id="rmt" width="100%">
+  <img id="img" width="100%">
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
-    const rmt = document.getElementById("rmt");
+    const img = document.getElementById("img");
     socket.on("video", (dat) => {
-      rmt.src = dat;
+      img.src = dat;
     });
   </script>
 </body>
