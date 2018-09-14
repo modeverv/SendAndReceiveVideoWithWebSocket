@@ -14,7 +14,9 @@ forever start index.js
 
 ## to send video
 
-access to /send
+access to `/send`
 
 ## to receive video
+
+access to `/`
 
