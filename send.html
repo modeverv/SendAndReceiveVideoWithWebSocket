@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>lovesaemihome</title>
+</head>
+
+<body>
+  <video id="vid" autoplay="1" width="300px"></video>
+  <canvas id="cvs" width="160" height="120"></canvas>
+  <img id="rmt" width="160px">
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+    window.URL = window.URL || window.webkitURL;
+    // Prefer camera resolution nearest to 1280x720.
+    var video = document.getElementById("vid");
+    var constraints = {
+      audio: false,
+      video: true
+    };
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then(function (stream) {
+        video.srcObject = stream;
+        video.onloadedmetadata = function (e) {
+          video.play();
+        };
+      })
+      .catch(function (err) {
+        alert(err.name + ": " + err.message);
+      });
+
+    video.addEventListener("timeupdate", () => {
+      const cvs = document.getElementById("cvs");
+      const ctx = cvs.getContext("2d");
+      ctx.drawImage(vid, 0, 0, cvs.width, cvs.height);
+      socket.emit("video", cvs.toDataURL());
+    });
+    const rmt = document.getElementById("rmt");
+    socket.on("video", (dat) => {
+      rmt.src = dat;
+    });
+  </script>
+</body>
+
+</html>
