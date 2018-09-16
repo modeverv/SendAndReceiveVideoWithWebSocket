@@ -5,19 +5,41 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Send Video</title>
+  <style>
+    #hide {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
-  <video id="video" autoplay="1" width="300px"></video>
-  <canvas id="canvas" width="160" height="120"></canvas>
+  <div id="main">
+    <button id="hide-display">save-battery</button>
+    <video id="video" width="160px"></video>
+    <canvas style="display:none;" id="canvas" width="160px" height="120px"></canvas>
+  </div>
+  <div id="hide">
+    <button id="display-screen">display-screen</button>
+  </div>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+    crossorigin="anonymous"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
+    $("#hide-display").click(function () {
+      $("#main").css("display", "none");
+      $("#hide").css("display", "block")
+    });
+    $("#display-screen").click(function () {
+      $("#main").css("display", "block");
+      $("#hide").css("display", "none");
+    })
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
     window.URL = window.URL || window.webkitURL;
+    const socket = io();
     const video = document.getElementById("video");
-    var constraints = {
-      audio: false,
+    const canvas = document.getElementById("canvas");
+    const constraints = {
+      audio: true,
       video: {
         facingMode: {
           exact: "environment"
@@ -35,7 +57,6 @@
         alert(err.name + ": " + err.message);
       });
     video.addEventListener("timeupdate", () => {
-      const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       socket.emit("video", canvas.toDataURL());
