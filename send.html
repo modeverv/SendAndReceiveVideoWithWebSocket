@@ -46,21 +46,30 @@
         }
       }
     };
-    navigator.mediaDevices.getUserMedia(constraints)
+
+    navigator.mediaDevices
+      .getUserMedia(constraints)
       .then(function (stream) {
         video.srcObject = stream;
         video.onloadedmetadata = function (e) {
           video.play();
         };
+        setInterval(update, 2000);
       })
       .catch(function (err) {
         alert(err.name + ": " + err.message);
       });
-    video.addEventListener("timeupdate", () => {
+    //負荷を下げる目的で2秒ごとに
+    const update = () => {
       const ctx = canvas.getContext("2d");
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       socket.emit("video", canvas.toDataURL());
-    });
+    }
+    //    video.addEventListener("timeupdate", () => {
+    //      const ctx = canvas.getContext("2d");
+    //      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    //      socket.emit("video", canvas.toDataURL());
+    //    });
   </script>
 </body>
 
