@@ -32,7 +32,7 @@
     $("#display-screen").click(function () {
       $("#main").css("display", "block");
       $("#hide").css("display", "none");
-    })
+    });
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
     window.URL = window.URL || window.webkitURL;
     const socket = io();
@@ -40,13 +40,14 @@
     const canvas = document.getElementById("canvas");
     const constraints = {
       audio: true,
-      video: {
-        facingMode: {
-          exact: "environment"
-        }
-      }
+      video:
+        /*{
+               facingMode: {
+                 exact: "environment"
+               }
+             }*/
+        true
     };
-
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then(function (stream) {
@@ -54,7 +55,7 @@
         video.onloadedmetadata = function (e) {
           video.play();
         };
-        setInterval(update, 2000);
+        setInterval(update, 1000);
       })
       .catch(function (err) {
         alert(err.name + ": " + err.message);
